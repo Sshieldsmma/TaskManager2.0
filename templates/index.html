@@ -46,19 +46,19 @@
         <input type="time" name="time" placeholder="Enter a Due Time">
         <button type="submit">Add Task</button>
     </form>
+    <p>Total Tasks: {{ tasks|length }}</p>
     <a href="/filter/"></a>
-        <button type="button" onclick="filterTasks()">Filter Tasks</button>
-        <script>
-            function filterTasks() {
+    <button type="button" onclick="filterTasks()">Filter Tasks</button>
+    <script>
+        function filterTasks() {
             var filter = prompt("Enter 'completed' to show completed tasks or 'non' to show tasks you still need to complete:");
             if (filter === 'completed' || filter === 'non') {
                 window.location.href = '/filter/' + filter;
             } else {
                 alert('Invalid input. Please enter either "completed" or "non".');
             }
-            }
-        </script>
-    </a>
+        }
+    </script>
     <table>
         <thead>
             <tr>
