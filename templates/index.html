@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>To-Do List</title>
+    <link rel ="stylesheet" href = {{ url_for('static', filename = "styles.css") }}>      
+</head>
+<body>
+    <div class="container">
+        <h1>My To-Do List</h1>
+    </div>
+    <style>
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .container h1 {
+            font-size: 2.5em;
+            color: #333;
+        }
+    </style>
+    <a href="/login">Login</a>
+    <a href="/register">Register</a>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul class="flashes">
+                {% for category, message in messages %}
+                    <li class="{{ category }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+    <script>
+        setTimeout(() => {
+            document.querySelector('.flashes').style.display = 'none';
+        }, 3000);
+    </script>
+    <form action="/add" method="post">
+        <input type="text" name="title" placeholder="Enter a task" required>
+        <input type="date" name="due_date" placeholder="Enter a Due Date">  
+        <input type="time" name="time" placeholder="Enter a Due Time">
+        <button type="submit">Add Task</button>
+    </form>
+    <a href="/filter/"></a>
+        <button type="button" onclick="filterTasks()">Filter Tasks</button>
+        <script>
+            function filterTasks() {
+            var filter = prompt("Enter 'completed' to show completed tasks or 'non' to show tasks you still need to complete:");
+            if (filter === 'completed' || filter === 'non') {
+                window.location.href = '/filter/' + filter;
+            } else {
+                alert('Invalid input. Please enter either "completed" or "non".');
+            }
+            }
+        </script>
+    </a>
+    <table>
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Due Date</th>
+                <th>Due Time</th>
+                <th>Completed</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for task in tasks %}
+                <tr>
+                    <td>{{ task['title'] }}</td>
+                    <td>{{ task['due_date'].strftime('%B %d %Y') }}</td>
+                    <td>{{ task['time'].strftime('%I:%M %p') }}</td>
+                    <td>{{ 'Yes' if task['completed'] else 'No' }}</td>
+                <td>
+                    <a href="/delete/{{ task['id'] }}" onclick="return confirm('Are you sure you want to delete this task?');">❌</a>
+                    <a href="/complete/{{ task['id'] }}">&#10003;</a>
+                    <a href="/edit/{{ task['id'] }}" onclick="document.getElementById('edit-form-{{ task['id'] }}').style.display = 'inline'; return false;">Edit</a>
+                    <form action="/edit/{{ task['id'] }}" method="post" style="display:none;" id="edit-form-{{ task['id'] }}">
+                        <input type="text" name="title" placeholder="New task title" required>
+                        <input type="date" name="date" placeholder="New due date">
+                        <input type="time" name="time" placeholder="New due time">
+                        <button type="submit">Update</button>
+                    </form>
+                </td>
+            {% endfor %}
+        </tbody>
+    </table>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+            text-align: left;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:hover {
+            background-color: #ddd;
+        }
+        .flashes {
+            list-style-type: none;
+            padding: 0;
+        }
+        .flashes li {
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+        .flashes .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .flashes .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+    </style>
+</body>
+<footer>
+    <a href="/logout">Logout</a>
+</footer>
+</html>
