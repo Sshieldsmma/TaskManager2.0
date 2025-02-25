@@ -1,2 +1,3 @@
 This basic task manager is really a showcase/practice project for my skills integrating different coding skills into a complete application. 
 This app has been deployed on AWS and features, user authentification(small scale db using sqlite, familiar and capable of using mySQL), management of listed tasks including posting, modifying, completing, deleting and more. Showcasing the ability to provide a quality flask application and deploy it on the web.
+http://ec2-3-147-63-103.us-east-2.compute.amazonaws.com:5000 is where you can view and sign up for the application, if the server is unavailable I took it down to save costs.
