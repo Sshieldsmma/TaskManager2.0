@@ -64,10 +64,13 @@ class Task(db.Model):
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     due_date = db.Column(db.Date, nullable=False)
     time = db.Column(db.Time, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
+    user = db.relationship('User', backref=db.backref('tasks', lazy=True))
    
 @app.route('/')
 def index():
-    tasks = Task.query.all()
+    tasks = Task.query.filter_by(user_id=current_user.id).all()
     return render_template('index.html', tasks=tasks)
 
 
@@ -128,7 +131,7 @@ def add():
         return redirect('/')
     time = request.form.get('time')
     time = datetime.datetime.strptime(time, '%H:%M').time()
-    new_task = Task(title=title, due_date=due_date, time=time)
+    new_task = Task(title=title, due_date=due_date, time=time, user_id=current_user.id)
     if not title or not due_date or not time:
         flash('Invalid task, enter all credentials')
         return redirect('/')
