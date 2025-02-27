@@ -71,7 +71,7 @@ def index():
     return render_template('index.html', tasks=tasks)
 
 
-@app.route('/login', methods=['GET', 'POST'])
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
