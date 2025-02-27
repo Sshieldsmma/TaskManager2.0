@@ -5,16 +5,21 @@ from flask_login import UserMixin, LoginManager, login_user, login_required, log
 from werkzeug.security import generate_password_hash, check_password_hash
 import datetime
 from datetime import timedelta
-
+import pymysql
+pymysql.install_as_MySQLdb()
 
 app = Flask(__name__)
 secret_key = "mysecretkey"
 app.config['SECRET_KEY'] = secret_key
 
+DB_HOST= "mydb.cx66k868ooyp.us-east-2.rds.amazonaws.com"
+DB_NAME = "mydb"
+DB_USER = "rduser"
+DB_PASS = "Database1006"
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'database.db')
+app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql+pymysql://{DB_USER}:{DB_USER}@{DB_HOST}/{DB_NAME}' 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=30)
 
@@ -165,5 +170,5 @@ def filter_tasks(filter):
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
-    app.run(host='0.0.0.0', debug=True)
-    
+    app.run(host="0.0.0.0", port=5000, debug=True)
+
