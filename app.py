@@ -146,14 +146,26 @@ def complete(task_id):
     db.session.commit()
     return redirect('/')
 
-@app.route('/edit/<int:task_id>', methods=['POST'])
+@app.route('/edit/<int:task_id>', methods=['GET', 'POST'])
 @login_required
 def edit(task_id):
     task = Task.query.get(task_id)
-    task.title = request.form.get('title')
-    db.session.commit()
-    flash('Task edited successfully')
-    return redirect('/')
+    if request.method == 'POST':
+        task.title = request.form.get('title')
+        task.time = request.form.get('time')
+        task.due_date = request.form.get('due_date')
+        if task.due_date:
+            task.due_date = datetime.datetime.strptime(task.due_date, '%Y-%m-%d').date()
+            if task.due_date < datetime.datetime.now().date():
+                flash('Due date cannot be in the past')
+                return redirect('/')
+        else:
+            flash('Invalid due date')
+            return redirect('/')
+        db.session.commit()
+        flash('Task edited successfully')
+        return redirect('/')
+    return render_template('edit.html', task=task)
 
 @app.route('/filter/<string:filter>')
 @login_required
