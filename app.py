@@ -25,7 +25,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=30)
 
 
-db = SQLAlchemy(app)
+db = SQLAlchemy()
 db.init_app(app)
 migrate = Migrate(app, db)
 
