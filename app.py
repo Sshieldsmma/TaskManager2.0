@@ -42,6 +42,9 @@ class User(db.Model, UserMixin):
     def check_password(self, password):
         return check_password_hash(self.password, password)
     
+    def get_id(self):
+        return str(self.id)
+    
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
@@ -73,13 +76,19 @@ def login():
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
+
         user = User.query.filter_by(username=username).first()
+
+        if user:
+            print(f"DEBUG: User found: {user.username}, Hashed Password: {user.password}")  # Debugging
+
         if user and user.check_password(password):
             login_user(user)
-            return redirect('/')
+            flash('Login successful!', 'success')
+            return redirect(url_for('index'))  # Use url_for instead of hardcoded path
         else:
-            flash('Invalid credentials, try again or register now')
-            return redirect('/login')
+            flash('Invalid credentials, try again or register now', 'danger')
+
     return render_template('login.html')
 
 @app.route('/register', methods=['GET', 'POST'])
