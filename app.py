@@ -50,8 +50,8 @@ login_manager.init_app(app)
 login_manager.login_view = 'login'
 
 @login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(int(user_id))
+def load_user(id):
+    return User.query.get(int(id))
 
 
 
@@ -72,24 +72,20 @@ def index():
 
 
 @app.route('/login', methods=['GET', 'POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
-
         user = User.query.filter_by(username=username).first()
-
-        if user:
-            print(f"DEBUG: User found: {user.username}, Hashed Password: {user.password}")  # Debugging
-
         if user and user.check_password(password):
             login_user(user)
-            flash('Login successful!', 'success')
-            return redirect(url_for('index'))  # Use url_for instead of hardcoded path
+            return redirect('/')
         else:
-            flash('Invalid credentials, try again or register now', 'danger')
-
+            flash('Invalid credentials, try again or register now')
+            return redirect('/login')
     return render_template('login.html')
+
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
