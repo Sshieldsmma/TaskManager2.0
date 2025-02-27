@@ -64,7 +64,7 @@ class Task(db.Model):
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     due_date = db.Column(db.Date, nullable=False)
     time = db.Column(db.Time, nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
     user = db.relationship('User', backref=db.backref('tasks', lazy=True))
    
