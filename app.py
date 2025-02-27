@@ -69,7 +69,10 @@ class Task(db.Model):
    
 @app.route('/')
 def index():
-    tasks = Task.query.filter_by(user_id=current_user.id).all()
+    if current_user.is_authenticated:
+        tasks = Task.query.filter_by(user_id=current_user.id).all()
+    else:
+        tasks = []
     return render_template('index.html', tasks=tasks)
 
 
